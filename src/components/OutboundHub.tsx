@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { Send, Mic, Square, Paperclip, Smile, X, Loader2 } from 'lucide-react';
+import { Send, Mic, Paperclip, Smile, X, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface OutboundHubProps {
