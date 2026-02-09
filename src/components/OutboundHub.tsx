@@ -472,16 +472,16 @@ export const OutboundHub = ({ recipientId, onMessageSent }: OutboundHubProps) =>
                         <Paperclip size={18} />
                     </button>
 
-                    <div className="flex-1 bg-[#1a1a1a] rounded-2xl border border-zinc-800 focus-within:border-[#25D366]/50">
+                    <div className="flex-1 bg-[#1a1a1a] rounded-full border border-zinc-800 focus-within:border-[#25D366]/50">
                         <textarea
                             ref={textareaRef}
                             value={input}
                             onChange={(e) => { setInput(e.target.value); autoResize(); }}
                             onKeyDown={handleKeyDown}
                             placeholder="Message..."
-                            className="w-full bg-transparent text-white px-3 py-2.5 text-[13px] sm:text-sm resize-none focus:outline-none placeholder:text-zinc-500"
+                            className="w-full bg-transparent text-white px-3 py-2 text-[14px] resize-none focus:outline-none placeholder:text-zinc-500"
                             rows={1}
-                            style={{ minHeight: '40px', maxHeight: '100px' }}
+                            style={{ minHeight: '36px', maxHeight: '80px' }}
                         />
                     </div>
 
