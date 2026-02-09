@@ -84,15 +84,18 @@ export const ChatHeader = ({ contactId, onBack, showBackButton }: ChatHeaderProp
                     <button
                         onClick={handleToggle}
                         disabled={toggling}
-                        className="relative flex-shrink-0"
+                        className="relative flex-shrink-0 self-center"
                         style={{
                             width: '38px',
                             height: '22px',
+                            minHeight: '22px',
+                            maxHeight: '22px',
                             borderRadius: '11px',
                             backgroundColor: aiEnabled ? '#25D366' : '#52525b',
                             transition: 'background-color 0.3s',
                             border: '1.5px solid',
                             borderColor: aiEnabled ? '#25D366' : '#71717a',
+                            overflow: 'hidden',
                         }}
                     >
                         <div
