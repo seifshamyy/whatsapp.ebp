@@ -29,11 +29,7 @@ function App() {
     return (
         <div
             className="flex w-full bg-black overflow-hidden"
-            style={{
-                height: '100dvh',
-                paddingTop: 'env(safe-area-inset-top)',
-                paddingBottom: 'env(safe-area-inset-bottom)',
-            }}
+            style={{ height: '100%' }}
         >
             {/* Sidebar - Full width on mobile, hidden when chat is open */}
             <div
