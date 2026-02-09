@@ -158,9 +158,9 @@ export const ChatSidebar = ({ onSelectChat, selectedChat }: ChatSidebarProps) =>
                     <img
                         src="https://whmbrguzumyatnslzfsq.supabase.co/storage/v1/object/public/Client%20Logos/d44435d6-4dfb-4616-8e0f-6cd45a88403d.jpeg"
                         alt="Portal Logo"
-                        className="w-6 h-8 sm:w-8 sm:h-10 rounded-md object-cover"
+                        className="w-7 h-9 sm:w-8 sm:h-10 rounded-md object-cover"
                     />
-                    <span className="font-semibold text-white text-xs sm:text-sm">Portal <span className="text-zinc-500 font-normal text-[8px] sm:text-[10px]">by Flowmaticlabs</span></span>
+                    <span className="font-semibold text-white text-sm">Portal <span className="text-zinc-500 font-normal text-[10px] sm:text-[11px]">by Flowmaticlabs</span></span>
                 </div>
                 <button className="p-1.5 sm:p-2 rounded-full hover:bg-white/5 text-[#25D366] transition-colors">
                     <Plus size={18} />
@@ -195,8 +195,8 @@ export const ChatSidebar = ({ onSelectChat, selectedChat }: ChatSidebarProps) =>
                                 key={contact.id}
                                 onClick={() => onSelectChat(contact.id)}
                                 className={`w-full px-3 py-2.5 sm:py-3 flex items-center gap-2.5 sm:gap-3 hover:bg-[#1a1a1a] transition-all border-b border-zinc-900/50 ${selectedChat === contact.id
-                                        ? 'bg-[#25D366]/10 border-l-2 border-l-[#25D366]'
-                                        : 'border-l-2 border-l-transparent'
+                                    ? 'bg-[#25D366]/10 border-l-2 border-l-[#25D366]'
+                                    : 'border-l-2 border-l-transparent'
                                     }`}
                             >
                                 {/* Avatar */}

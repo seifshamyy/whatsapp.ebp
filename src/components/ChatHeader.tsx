@@ -55,12 +55,19 @@ export const ChatHeader = ({ contactId, onBack, showBackButton, isEnabled = true
                 {/* Toggle Switch */}
                 <button
                     onClick={handleToggle}
-                    className={`relative w-10 h-5 rounded-full transition-all ${enabled ? 'bg-[#25D366]' : 'bg-zinc-600'
+                    className={`relative rounded-full transition-all duration-300 ${enabled ? 'bg-[#25D366]' : 'bg-zinc-600'
                         }`}
+                    style={{ width: '44px', height: '24px' }}
                 >
                     <div
-                        className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${enabled ? 'left-[22px]' : 'left-0.5'
-                            }`}
+                        className="absolute rounded-full bg-white transition-all duration-300"
+                        style={{
+                            width: '20px',
+                            height: '20px',
+                            top: '2px',
+                            left: enabled ? '22px' : '2px',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+                        }}
                     />
                 </button>
 
