@@ -161,11 +161,25 @@ export const ChatSidebar = ({ onSelectChat, selectedChat }: ChatSidebarProps) =>
         return () => clearInterval(pollInterval);
     }, [fetchContacts, fetchContactsEbp]);
 
-    const filteredContacts = contacts.filter((c) =>
-        c.id.includes(searchQuery) ||
-        c.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.lastMessage?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const [selectedTagFilter, setSelectedTagFilter] = useState<number | null>(null);
+
+    const filteredContacts = contacts.filter((c) => {
+        // Text search: name, number, message, or tag name
+        const textMatch = !searchQuery || (
+            c.id.includes(searchQuery) ||
+            c.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            c.lastMessage?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (c.tags && c.tags.some(tagId => {
+                const tag = allTags.find(t => t.id === tagId);
+                return tag?.['tag name']?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false;
+            }))
+        );
+
+        // Tag chip filter
+        const tagMatch = !selectedTagFilter || (c.tags && c.tags.includes(selectedTagFilter));
+
+        return textMatch && tagMatch;
+    });
 
     const formatTime = (timestamp: string) => {
         try {
@@ -250,6 +264,29 @@ export const ChatSidebar = ({ onSelectChat, selectedChat }: ChatSidebarProps) =>
                             className="w-full bg-white border border-slate-200 rounded-lg py-2 pl-9 pr-3 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500/30 focus:border-red-500/50"
                         />
                     </div>
+
+                    {/* Tag Filter Chips */}
+                    {allTags.length > 0 && (
+                        <div className="flex gap-1.5 mt-2 overflow-x-auto pb-1 scrollbar-hide">
+                            {allTags.map(tag => (
+                                <button
+                                    key={tag.id}
+                                    onClick={() => setSelectedTagFilter(selectedTagFilter === tag.id ? null : tag.id)}
+                                    className="flex-shrink-0 px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all"
+                                    style={selectedTagFilter === tag.id ? {
+                                        backgroundColor: tag['tag hex'] || '#ef4444',
+                                        color: '#fff',
+                                    } : {
+                                        backgroundColor: `${tag['tag hex']}15`,
+                                        color: tag['tag hex'] || '#64748b',
+                                        border: `1px solid ${tag['tag hex']}30`,
+                                    }}
+                                >
+                                    {tag['tag name']}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Contact List */}
