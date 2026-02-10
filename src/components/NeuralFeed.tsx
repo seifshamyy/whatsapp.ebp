@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { useMessages } from '../hooks/useMessages';
 import { MessageBubble } from './MessageBubble';
 import { MessageSquare } from 'lucide-react';
@@ -13,7 +13,7 @@ export const NeuralFeed = ({ selectedChat }: NeuralFeedProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [prevMsgCount, setPrevMsgCount] = useState(0);
     const [isAtBottom, setIsAtBottom] = useState(true);
-    const hasInitiallyRendered = useRef(false);
+    const hasInitiallyScrolled = useRef(false);
 
     // Filter messages for selected chat
     const filteredMessages = selectedChat
@@ -29,20 +29,23 @@ export const NeuralFeed = ({ selectedChat }: NeuralFeedProps) => {
         }
     };
 
-    // After initial render, scroll to bottom instantly; for new messages, scroll smoothly
-    useEffect(() => {
+    // useLayoutEffect: fires BEFORE browser paint → user never sees wrong position
+    useLayoutEffect(() => {
         if (!containerRef.current || filteredMessages.length === 0) return;
 
-        if (!hasInitiallyRendered.current) {
-            // First time messages render: instant jump to bottom
+        if (!hasInitiallyScrolled.current) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
-            hasInitiallyRendered.current = true;
+            hasInitiallyScrolled.current = true;
             setPrevMsgCount(filteredMessages.length);
-            return;
         }
+    }, [filteredMessages.length]);
+
+    // Separate useEffect for smooth scroll on NEW messages (fires after paint, which is fine)
+    useEffect(() => {
+        if (!hasInitiallyScrolled.current) return; // Skip until initial scroll done
 
         const hasNewMessages = filteredMessages.length > prevMsgCount;
-        if (hasNewMessages && isAtBottom) {
+        if (hasNewMessages && isAtBottom && containerRef.current) {
             containerRef.current.scrollTo({
                 top: containerRef.current.scrollHeight,
                 behavior: 'smooth'

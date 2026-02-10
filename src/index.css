@@ -37,9 +37,8 @@ select {
     }
 }
 
-/* Smooth Scrolling */
+/* Tap highlight + global resets */
 * {
-    scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
 }
 
