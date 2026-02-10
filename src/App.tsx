@@ -65,7 +65,7 @@ function App() {
                                 onBack={handleBack}
                                 showBackButton={true}
                             />
-                            <NeuralFeed selectedChat={selectedChat} />
+                            <NeuralFeed key={selectedChat} selectedChat={selectedChat} />
                             <OutboundHub recipientId={selectedChat} onMessageSent={handleMessageSent} />
                         </>
                     ) : (

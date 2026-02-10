@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { useMessages } from '../hooks/useMessages';
 import { MessageBubble } from './MessageBubble';
 import { MessageSquare } from 'lucide-react';
@@ -29,19 +29,29 @@ export const NeuralFeed = ({ selectedChat }: NeuralFeedProps) => {
         }
     };
 
-    // Only auto-scroll when NEW messages arrive AND user is at bottom
-    useEffect(() => {
-        if (filteredMessages.length > prevMsgCount && isAtBottom) {
-            bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Use useLayoutEffect to scroll to bottom INSTANTLY on mount
+    useLayoutEffect(() => {
+        if (containerRef.current) {
+            // Force instant scroll by directly setting scrollTop
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+            setIsAtBottom(true);
         }
-        setPrevMsgCount(filteredMessages.length);
-    }, [filteredMessages.length, prevMsgCount, isAtBottom]);
+    }, []); // Run ONCE on mount (because we force remount on chat change)
 
-    // Scroll to bottom when chat changes
+    // Smooth scroll for NEW messages only
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'auto' });
-        setIsAtBottom(true);
-    }, [selectedChat]);
+        const hasNewMessages = filteredMessages.length > prevMsgCount;
+
+        if (hasNewMessages && isAtBottom && containerRef.current) {
+            // For new messages, use smooth scroll
+            containerRef.current.scrollTo({
+                top: containerRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        setPrevMsgCount(filteredMessages.length);
+    }, [filteredMessages.length, isAtBottom, prevMsgCount]);
 
     if (!selectedChat) {
         return (
