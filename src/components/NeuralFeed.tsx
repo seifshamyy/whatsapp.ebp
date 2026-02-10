@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useLayoutEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMessages } from '../hooks/useMessages';
 import { MessageBubble } from './MessageBubble';
 import { MessageSquare } from 'lucide-react';
@@ -10,10 +10,10 @@ interface NeuralFeedProps {
 
 export const NeuralFeed = ({ selectedChat }: NeuralFeedProps) => {
     const { messages, loading, error } = useMessages();
-    const bottomRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [prevMsgCount, setPrevMsgCount] = useState(0);
     const [isAtBottom, setIsAtBottom] = useState(true);
+    const hasInitiallyRendered = useRef(false);
 
     // Filter messages for selected chat
     const filteredMessages = selectedChat
@@ -29,21 +29,20 @@ export const NeuralFeed = ({ selectedChat }: NeuralFeedProps) => {
         }
     };
 
-    // Use useLayoutEffect to scroll to bottom INSTANTLY on mount
-    useLayoutEffect(() => {
-        if (containerRef.current) {
-            // Force instant scroll by directly setting scrollTop
-            containerRef.current.scrollTop = containerRef.current.scrollHeight;
-            setIsAtBottom(true);
-        }
-    }, []); // Run ONCE on mount (because we force remount on chat change)
-
-    // Smooth scroll for NEW messages only
+    // After initial render, scroll to bottom instantly; for new messages, scroll smoothly
     useEffect(() => {
-        const hasNewMessages = filteredMessages.length > prevMsgCount;
+        if (!containerRef.current || filteredMessages.length === 0) return;
 
-        if (hasNewMessages && isAtBottom && containerRef.current) {
-            // For new messages, use smooth scroll
+        if (!hasInitiallyRendered.current) {
+            // First time messages render: instant jump to bottom
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+            hasInitiallyRendered.current = true;
+            setPrevMsgCount(filteredMessages.length);
+            return;
+        }
+
+        const hasNewMessages = filteredMessages.length > prevMsgCount;
+        if (hasNewMessages && isAtBottom) {
             containerRef.current.scrollTo({
                 top: containerRef.current.scrollHeight,
                 behavior: 'smooth'
@@ -113,7 +112,6 @@ export const NeuralFeed = ({ selectedChat }: NeuralFeedProps) => {
                     <MessageBubble key={msg.id || msg.mid} message={msg} />
                 ))
             )}
-            <div ref={bottomRef} />
         </div>
     );
 };
