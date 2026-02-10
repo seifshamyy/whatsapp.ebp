@@ -12,6 +12,7 @@ interface SidebarContact {
     lastMessageTime: string;
     unreadCount: number;
     tags: number[];
+    aiEnabled: boolean;
 }
 
 interface ChatSidebarProps {
@@ -108,6 +109,7 @@ export const ChatSidebar = ({ onSelectChat, selectedChat }: ChatSidebarProps) =>
                         lastMessageTime: msg.created_at,
                         unreadCount: isIncoming && !isRead ? 1 : 0,
                         tags: ebpContact?.tags || [],
+                        aiEnabled: ebpContact?.AI_replies === 'true',
                     });
                 } else if (isIncoming && !isRead) {
                     const existing = contactMap.get(contactId)!;
@@ -280,8 +282,16 @@ export const ChatSidebar = ({ onSelectChat, selectedChat }: ChatSidebarProps) =>
                                         >
                                             {contact.name?.[0]?.toUpperCase() || <User size={18} />}
                                         </div>
+                                        {/* AI Status Dot */}
+                                        <div
+                                            className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${contact.aiEnabled ? 'bg-green-500' : 'bg-red-500'}`}
+                                            title={contact.aiEnabled ? 'AI Active' : 'AI Inactive'}
+                                        >
+                                            <div className={`absolute inset-0 rounded-full animate-ping opacity-75 ${contact.aiEnabled ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                                        </div>
+
                                         {contact.unreadCount > 0 && selectedChat !== contact.id && (
-                                            <div className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center shadow-sm">
+                                            <div className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center shadow-sm z-10">
                                                 {contact.unreadCount}
                                             </div>
                                         )}

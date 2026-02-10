@@ -33,44 +33,55 @@ function App() {
     };
 
     return (
-        <div className="flex w-full h-full bg-black overflow-hidden">
-            {/* Sidebar - Full width on mobile, hidden when chat is open */}
+        <div className="w-full h-full overflow-hidden bg-white">
+            {/* 
+              Mobile: Sliding container (200vw width)
+              Desktop: Normal Flex container (100% width)
+            */}
             <div
-                className={`${showMobileChat ? 'hidden' : 'flex'} md:flex w-full md:w-80 lg:w-96 h-full flex-shrink-0`}
+                className="flex h-full transition-transform duration-300 ease-out md:transform-none md:w-full"
+                style={{
+                    // On mobile, we need 2 screens width. On desktop, we let CSS handle it (w-full).
+                    width: window.innerWidth < 768 ? '200vw' : '100%',
+                    transform: window.innerWidth < 768
+                        ? (showMobileChat ? 'translateX(-50%)' : 'translateX(0)')
+                        : 'none',
+                }}
             >
-                <ChatSidebar
-                    onSelectChat={handleSelectChat}
-                    selectedChat={selectedChat}
-                />
-            </div>
+                {/* Sidebar: 50% width on mobile (1 screen), fixed width on desktop */}
+                <div className="w-[50%] md:w-80 lg:w-96 h-full flex-shrink-0">
+                    <ChatSidebar
+                        onSelectChat={handleSelectChat}
+                        selectedChat={selectedChat}
+                    />
+                </div>
 
-            {/* Main Chat Area - Full width on mobile */}
-            <div
-                className={`${showMobileChat ? 'flex' : 'hidden'} md:flex flex-1 flex-col h-full bg-[#0a0a0a] min-w-0`}
-            >
-                {selectedChat ? (
-                    <>
-                        <ChatHeader
-                            contactId={selectedChat}
-                            onBack={handleBack}
-                            showBackButton={true}
-                        />
-                        <NeuralFeed selectedChat={selectedChat} />
-                        <OutboundHub recipientId={selectedChat} onMessageSent={handleMessageSent} />
-                    </>
-                ) : (
-                    <div className="flex-1 flex items-center justify-center">
-                        <div className="text-center px-4">
-                            <div className="w-48 h-48 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#25D366]/5 to-transparent flex items-center justify-center">
-                                <svg viewBox="0 0 303 172" width="150" className="text-[#25D366]/20">
-                                    <path fill="currentColor" d="M229.565 160.229c32.647-16.024 54.484-49.903 54.484-88.87C284.049 31.921 252.128 0 212.69 0c-28.076 0-52.58 16.166-64.39 39.695C136.49 16.166 111.986 0 83.91 0 44.472 0 12.551 31.921 12.551 71.36c0 38.966 21.837 72.845 54.484 88.869-14.167 6.163-26.452 15.528-35.706 27.2h233.942c-9.254-11.672-21.539-21.037-35.706-27.2z" />
-                                </svg>
+                {/* Chat Area: 50% width on mobile (1 screen), flex-1 on desktop */}
+                <div className="w-[50%] md:flex-1 h-full flex flex-col bg-white min-w-0">
+                    {selectedChat ? (
+                        <>
+                            <ChatHeader
+                                contactId={selectedChat}
+                                onBack={handleBack}
+                                showBackButton={true}
+                            />
+                            <NeuralFeed selectedChat={selectedChat} />
+                            <OutboundHub recipientId={selectedChat} onMessageSent={handleMessageSent} />
+                        </>
+                    ) : (
+                        <div className="flex-1 flex items-center justify-center bg-white">
+                            <div className="text-center px-4">
+                                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-red-50 flex items-center justify-center border border-red-100">
+                                    <svg viewBox="0 0 24 24" width="40" className="text-red-500" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                    </svg>
+                                </div>
+                                <h2 className="text-slate-900 text-2xl font-bold mb-2">CRM Agent</h2>
+                                <p className="text-slate-500 text-sm">Select a conversation to get started</p>
                             </div>
-                            <h2 className="text-white text-xl font-light mb-2">Portal</h2>
-                            <p className="text-zinc-500 text-sm">Select a conversation</p>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );
