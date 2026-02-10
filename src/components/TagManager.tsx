@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Plus, Edit2, Trash2, Check } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Tag, TAG_COLORS } from '../types';
@@ -100,7 +101,7 @@ export const TagManager = ({ isOpen, onClose, onTagsChanged, contactId, contactT
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4" onClick={onClose}>
             <div className="w-full sm:w-[400px] max-h-[80vh] bg-white rounded-2xl sm:rounded-3xl border border-slate-200 flex flex-col shadow-2xl transition-all animate-in fade-in slide-in-from-bottom-4" onClick={e => e.stopPropagation()}>
                 {/* Header */}
@@ -268,6 +269,7 @@ export const TagManager = ({ isOpen, onClose, onTagsChanged, contactId, contactT
                     </div>
                 )}
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
